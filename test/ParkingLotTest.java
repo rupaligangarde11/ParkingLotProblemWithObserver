@@ -38,5 +38,4 @@ public class ParkingLotTest {
         assertEquals(car1, parkingLot.unparkCar(ticket));
     }
 
-
 }
