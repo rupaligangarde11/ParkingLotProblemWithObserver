@@ -3,23 +3,26 @@ import java.util.HashMap;
 public class ParkingLot {
     private int numOfEmptySlots;
     private HashMap<ParkingTicket, Object> ticketAndCarMap;
+    private int capacity;
 
-    public ParkingLot(int numOfEmptySlots) {
-        this.numOfEmptySlots = numOfEmptySlots;
+    public ParkingLot(int capacity) {
+        this.capacity = capacity;
+        this.numOfEmptySlots = capacity;
        ticketAndCarMap = new HashMap<>();
     }
 
-    public ParkingTicket parkAndGetTicket(Object car) throws CarAlreadyParkedException, NoEmptySpotAvailableException {
-        if(!isCarParkedAlready(car)) {
-            if (numOfEmptySlots > 0) {
+    public ParkingTicket parkAndGetTicket(Object car) throws CarAlreadyParkedException, NoEmptySpotAvailableException, ParkingLotFullException {
+        if (!isCarParkedAlready(car)) {
+            if (numOfEmptySlots>0) {
                 numOfEmptySlots--;
                 ParkingTicket ticket = new ParkingTicket(car.hashCode());
                 ticketAndCarMap.put(ticket, car);
+                if(numOfEmptySlots==0)
+                    throw new ParkingLotFullException();
                 return ticket;
-            }
-            throw new NoEmptySpotAvailableException();
+            } else { throw new NoEmptySpotAvailableException(); }
         }
-        throw new CarAlreadyParkedException();
+        else { throw new CarAlreadyParkedException(); }
     }
 
     private boolean isCarParkedAlready(Object carToBeParked) {
@@ -34,9 +37,12 @@ public class ParkingLot {
     public Object unparkCar(ParkingTicket ticketToUnpark) throws CarNotFoundException {
         for(ParkingTicket parkingTicket: ticketAndCarMap.keySet()){
             if(parkingTicket.equals(ticketToUnpark)){
+                numOfEmptySlots++;
                 return ticketAndCarMap.remove(ticketToUnpark);
             }
         }
         throw new CarNotFoundException();
     }
+
+
 }
