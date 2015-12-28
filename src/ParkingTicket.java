@@ -6,9 +6,7 @@ public class ParkingTicket {
         this.carIdentifier = carIdentifier;
     }
 
-    public int getCarIdentifier() {
-        return carIdentifier;
-    }
+
 
 
     @Override

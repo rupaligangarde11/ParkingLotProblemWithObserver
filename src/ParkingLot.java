@@ -9,14 +9,17 @@ public class ParkingLot {
        ticketAndCarMap = new HashMap<>();
     }
 
-    public ParkingTicket parkAndGetTicket(Object car) {
-        if(!isCarParkedAlready(car) && numOfEmptySlots > 0) {
-            numOfEmptySlots--;
-            ParkingTicket ticket = new ParkingTicket(car.hashCode());
-            ticketAndCarMap.put(ticket, car);
-            return ticket;
+    public ParkingTicket parkAndGetTicket(Object car) throws CarAlreadyParkedException, NoEmptySpotAvailableException {
+        if(!isCarParkedAlready(car)) {
+            if (numOfEmptySlots > 0) {
+                numOfEmptySlots--;
+                ParkingTicket ticket = new ParkingTicket(car.hashCode());
+                ticketAndCarMap.put(ticket, car);
+                return ticket;
+            }
+            throw new NoEmptySpotAvailableException();
         }
-        return null;
+        throw new CarAlreadyParkedException();
     }
 
     private boolean isCarParkedAlready(Object carToBeParked) {
@@ -28,12 +31,12 @@ public class ParkingLot {
     }
 
 
-    public Object unparkCar(ParkingTicket ticketToUnpark) {
+    public Object unparkCar(ParkingTicket ticketToUnpark) throws CarNotFoundException {
         for(ParkingTicket parkingTicket: ticketAndCarMap.keySet()){
             if(parkingTicket.equals(ticketToUnpark)){
                 return ticketAndCarMap.remove(ticketToUnpark);
             }
         }
-        return null;
+        throw new CarNotFoundException();
     }
 }

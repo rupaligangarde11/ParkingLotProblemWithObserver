@@ -13,17 +13,17 @@ public class ParkingLotTest {
         assertEquals(ticket, parkingLot.parkAndGetTicket(car));
     }
 
-    @Test
-    public void shouldNotReturnATicketWhenTheLotIsFull() {
+    @Test(expected = NoEmptySpotAvailableException.class)
+    public void shouldNotReturnATicketWhenTheLotIsFull() throws CarAlreadyParkedException, NoEmptySpotAvailableException {
         ParkingLot parkingLot = new ParkingLot(1);
         Object car1 = new Object();
         parkingLot.parkAndGetTicket(car1);
         Object car2 = new Object();
-        assertNull(parkingLot.parkAndGetTicket(car2));
+        parkingLot.parkAndGetTicket(car2);
     }
 
-    @Test
-    public void shouldNotReturnATicketWhenThisCarIsParkedAlready() {
+    @Test(expected = CarAlreadyParkedException.class)
+    public void shouldNotReturnATicketWhenThisCarIsParkedAlready() throws CarAlreadyParkedException, NoEmptySpotAvailableException {
         ParkingLot parkingLot = new ParkingLot(2);
         Object car1 = new Object();
         parkingLot.parkAndGetTicket(car1);
@@ -31,11 +31,21 @@ public class ParkingLotTest {
     }
 
     @Test
-    public void shouldUnparkTheRightCarGivenTheTicket() {
+    public void shouldUnparkTheRightCarGivenTheTicket() throws CarAlreadyParkedException, NoEmptySpotAvailableException, CarNotFoundException {
         ParkingLot parkingLot = new ParkingLot(2);
         Object car1 = new Object();
         ParkingTicket ticket = parkingLot.parkAndGetTicket(car1);
         assertEquals(car1, parkingLot.unparkCar(ticket));
     }
 
+    @Test(expected = CarNotFoundException.class)
+    public void shouldThrowExceptionWhenTryingToUnparkAnAlreadyParkedCar() throws CarAlreadyParkedException, NoEmptySpotAvailableException, CarNotFoundException{
+        ParkingLot parkingLot = new ParkingLot(1);
+        Object car = new Object();
+        ParkingTicket ticket = parkingLot.parkAndGetTicket(car);
+        parkingLot.unparkCar(ticket);
+        parkingLot.unparkCar(ticket);
+
+
+    }
 }
