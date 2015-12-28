@@ -1,5 +1,6 @@
-public class ParkingLotOwner {
-    public void putFullSign() {
-    }
+public class ParkingLotOwner extends Observer {
+    @Override
+    public void notifyToPerson() {
 
+    }
 }
