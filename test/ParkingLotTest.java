@@ -35,7 +35,7 @@ public class ParkingLotTest {
         ParkingLot parkingLot = new ParkingLot(2);
         Object car1 = new Object();
         ParkingTicket ticket = parkingLot.parkAndGetTicket(car1);
-        assertEquals(car1.hashCode(), parkingLot.unparkCar(ticket));
+        assertEquals(car1, parkingLot.unparkCar(ticket));
     }
 
 

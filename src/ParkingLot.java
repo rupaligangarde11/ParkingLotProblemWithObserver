@@ -1,5 +1,3 @@
-import org.omg.CORBA.Object;
-
 import java.util.ArrayList;
 
 public class ParkingLot {
@@ -18,26 +16,30 @@ public class ParkingLot {
             numOfEmptySlots--;
             ParkingTicket ticket = new ParkingTicket(car.hashCode());
             ticketList.add(ticket);
+            carsParked.add(car);
             return ticket;
         }
         return null;
     }
 
-    private boolean isCarParkedAlready(Object car) {
-        ParkingTicket ticket = new ParkingTicket(car.hashCode());
-         for(ParkingTicket parkingTicket: ticketList){
-             if(parkingTicket.equals(ticket))
-                 return true;
-         }
+    private boolean isCarParkedAlready(Object carToBeParked) {
+        for(Object car: carsParked){
+            if(car.equals(carToBeParked))
+                return true;
+        }
         return false;
     }
 
 
-    public int unparkCar(ParkingTicket ticket) {
-        for(ParkingTicket parkingTicket: ticketList){
-            if(parkingTicket.equals(ticket))
-                return ticket.getCarIdentifier();
+    public Object unparkCar(ParkingTicket ticketToUnpark) {
+        for(int ticketIndex = 0; ticketIndex<ticketList.size();ticketIndex++) {
+            ParkingTicket parkingTicket = ticketList.get(ticketIndex);
+            if(parkingTicket.equals(ticketToUnpark)) {
+                ticketList.remove(ticketIndex);
+                numOfEmptySlots++;
+                return carsParked.remove(ticketIndex);
+            }
         }
-        return -1;
+        return null;
     }
 }
