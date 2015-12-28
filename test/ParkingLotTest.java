@@ -1,26 +1,28 @@
- import org.junit.Test;
- import org.mockito.Mockito;
+import org.junit.Test;
+import org.mockito.Mockito;
 
- import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
- import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verify;
 
- public class ParkingLotTest {
+public class ParkingLotTest {
 
     @org.junit.Test
     public void isTicketReturnedWhenCarIsParked() throws ParkingLotException {
         ParkingLotOwner owner = Mockito.mock(ParkingLotOwner.class);
-        ParkingLot parkingLot = new ParkingLot(10, owner);
+        AirportSecurity airportSecurity = Mockito.mock(AirportSecurity.class);
+        ParkingLot parkingLot = new ParkingLot(10,notifier);
         Object car = new Object();
         ParkingTicket ticket = new ParkingTicket(car.hashCode());
         assertEquals(ticket, parkingLot.parkAndGetTicket(car));
     }
 
     @Test(expected = ParkingLotException.class)
-    public void shouldNotReturnATicketWhenTheLotIsFull() throws ParkingLotException{
+    public void shouldNotReturnATicketWhenTheLotIsFull() throws ParkingLotException {
         ParkingLotOwner owner = Mockito.mock(ParkingLotOwner.class);
-        ParkingLot parkingLot = new ParkingLot(1, owner);
+        AirportSecurity airportSecurity = Mockito.mock(AirportSecurity.class);
+        ParkingLot parkingLot = new ParkingLot(1,notifier);
         Object car1 = new Object();
         parkingLot.parkAndGetTicket(car1);
         Object car2 = new Object();
@@ -30,7 +32,8 @@ import static org.junit.Assert.assertTrue;
     @Test(expected = ParkingLotException.class)
     public void shouldNotReturnATicketWhenThisCarIsParkedAlready() throws ParkingLotException {
         ParkingLotOwner owner = Mockito.mock(ParkingLotOwner.class);
-        ParkingLot parkingLot = new ParkingLot(2, owner);
+        AirportSecurity airportSecurity = Mockito.mock(AirportSecurity.class);
+        ParkingLot parkingLot = new ParkingLot(2,notifier);
         Object car1 = new Object();
         parkingLot.parkAndGetTicket(car1);
         assertNull(parkingLot.parkAndGetTicket(car1));
@@ -39,16 +42,18 @@ import static org.junit.Assert.assertTrue;
     @Test
     public void shouldUnparkTheRightCarGivenTheTicket() throws ParkingLotException {
         ParkingLotOwner owner = Mockito.mock(ParkingLotOwner.class);
-        ParkingLot parkingLot = new ParkingLot(2, owner);
+        AirportSecurity airportSecurity = Mockito.mock(AirportSecurity.class);
+        ParkingLot parkingLot = new ParkingLot(2,notifier);
         Object car1 = new Object();
         ParkingTicket ticket = parkingLot.parkAndGetTicket(car1);
         assertEquals(car1, parkingLot.unparkCar(ticket));
     }
 
     @Test(expected = ParkingLotException.class)
-    public void shouldThrowExceptionWhenParkingLotIsFull() throws ParkingLotException{
+    public void shouldThrowExceptionWhenParkingLotIsFull() throws ParkingLotException {
         ParkingLotOwner owner = Mockito.mock(ParkingLotOwner.class);
-        ParkingLot parkingLot = new ParkingLot(1, owner);
+        AirportSecurity airportSecurity = Mockito.mock(AirportSecurity.class);
+        ParkingLot parkingLot = new ParkingLot(1,notifier);
         Object car = new Object();
         ParkingTicket ticket = parkingLot.parkAndGetTicket(car);
 
@@ -57,7 +62,8 @@ import static org.junit.Assert.assertTrue;
     @Test(expected = ParkingLotException.class)
     public void shouldReturnTrueWhenParkingLotIsFull() throws ParkingLotException {
         ParkingLotOwner owner = Mockito.mock(ParkingLotOwner.class);
-        ParkingLot parkingLot = new ParkingLot(2, owner);
+        AirportSecurity airportSecurity = Mockito.mock(AirportSecurity.class);
+        ParkingLot parkingLot = new ParkingLot(2,notifier);
         Object car1 = new Object();
         parkingLot.parkAndGetTicket(car1);
         Object car2 = new Object();
@@ -67,7 +73,8 @@ import static org.junit.Assert.assertTrue;
     @Test(expected = ParkingLotException.class)
     public void shouldThrowExceptionWhenTryingToUnparkAnAlreadyUnparkedCar() throws ParkingLotException {
         ParkingLotOwner owner = Mockito.mock(ParkingLotOwner.class);
-        ParkingLot parkingLot = new ParkingLot(2, owner);
+        AirportSecurity airportSecurity = Mockito.mock(AirportSecurity.class);
+        ParkingLot parkingLot = new ParkingLot(2,notifier);
         Object car = new Object();
         ParkingTicket ticket = parkingLot.parkAndGetTicket(car);
         parkingLot.unparkCar(ticket);
@@ -77,10 +84,22 @@ import static org.junit.Assert.assertTrue;
     @Test
     public void shouldVerifyThatOwnerIsNotifiedOnParkingLotIsFull() throws ParkingLotException {
         ParkingLotOwner owner = Mockito.mock(ParkingLotOwner.class);
-        ParkingLot parkingLot= new ParkingLot(1,owner);
+        AirportSecurity airportSecurity = Mockito.mock(AirportSecurity.class);
+        ParkingLot parkingLot = new ParkingLot(1,notifier);
         Object car = new Object();
         parkingLot.parkAndGetTicket(car);
         verify(owner).putFullSign();
-
     }
+
+    @Test
+    public void shouldNotifyOwnerAndSecurityPersonnelOnParkingLotFull() throws ParkingLotException {
+        ParkingLotOwner owner = Mockito.mock(ParkingLotOwner.class);
+        AirportSecurity airportSecurity = Mockito.mock(AirportSecurity.class);
+        Object car1 = new Object();
+        ParkingLot parkinglot = new ParkingLot(1, notifier);
+        parkinglot.parkAndGetTicket(car1);
+        verify(notifier).notifyAboutFullParkingLot();
+    }
+
+
 }
